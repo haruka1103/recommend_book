@@ -29,7 +29,8 @@ export async function POST(request: Request) {
         description: z.string().describe('なぜそのジャンルが合うのかの説明'),
         books: z.array(
           z.object({
-            title: z.string().describe('本のタイトルと著者名'),
+            title: z.string().describe('本のタイトル'),
+            author: z.string().describe('著者名'),
             reason: z.string().describe('その本がなぜ今の気分に合うのかの理由'),
           })
         ).min(3).max(5).describe('おすすめの本のリスト'),
