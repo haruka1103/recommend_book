@@ -45,6 +45,36 @@ export async function POST(request: Request) {
         { status: 502 }
       )
     }
+
+    //GoogleBooksAPI
+    const apikey = process.env.GOOGLE_BOOKS_API_KEY;
+
+    const enrichedBooks = await Promise.all(
+      resultObj.books.map(async (book: any) => {
+        try{
+          const seachUrl = 'https://www.googleapis.com/books/v1/volumes?q=intitle:${encedeURIComponent(book.title)}&key=${apikey}';
+          const res = await fetch(seachUrl);
+          const data = await res.json();
+          const item = data.items?.[0];
+          return {
+            ...book,
+            cover: item?.volumeInfo?.imageLinks?.thumbnail || null,//本の表紙URL
+            previewUrl: item?.volumeInfo?.previewLink || null,//本のプレビューURL
+            isEbook: item?.saleInfo?.isEbook || false,//電子書籍かどうか
+            infoLink: item?.volumeInfo?.infoLink || null,//本の詳細情報URL
+          };
+        } catch (e) {
+          console.error('Books API error for ${book.title}:', e);
+          return { ...book, cover: null, previewUrl: null, isEbook: false };
+        }
+      })
+    );
+    // 補強されたデータでレスポンスを作成
+    const finalResponse = {
+      ...resultObj,
+      books: enrichedBooks
+    };
+    
     console.log('Successfully generated recommendation:', resultObj)
 
     return NextResponse.json(resultObj)

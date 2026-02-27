@@ -1,7 +1,7 @@
 'use client'
 
 import { Card } from '@/components/ui/card'
-import { BookOpen, Tag } from 'lucide-react'
+import { BookOpen, Tag, ExternalLink, Book as BookIcom } from 'lucide-react'
 
 interface BookRecommendationResultProps {
   genres: string[]
@@ -9,6 +9,11 @@ interface BookRecommendationResultProps {
   books: Array<{
     title: string
     reason: string
+    author: string
+    cover: string | null
+    previewUrl: string | null
+    isEbook: boolean
+    infoLink: string | null
   }>
 }
 
@@ -62,26 +67,80 @@ export function BookRecommendationResult({
           </h3>
         </div>
 
-        <div className="grid gap-4">
-          {books.map((book, index) => (
+        <div className="grid gap-6">
+          {books.pam((book, index) => (
             <Card
               key={index}
               className="bg-card/80 backdrop-blur border-border shadow-lg hover:shadow-xl hover:border-accent/50 transition-all"
             >
-              <div className="p-6">
-                <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-accent/20 flex items-center justify-center">
-                    <span className="text-lg font-bold text-accent">
-                      {index + 1}
-                    </span>
+              <div className="p-0 flex flex-col sm:flex-row">
+                {/*左側：本の表紙画像*/}
+                <div className="w-full sm:w-40 h-56 bg-muted relative flex-shrink-0">
+                  {book.cover ? (
+                    <Image
+                      src={book.cover}
+                      alt={book.title}
+                      className="w-full h-full objext-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground bg-accent/5>
+                      <BookIcom className="w-10 h-10 mb-2 opacity-20" />
+                      <span className="text-sm">No Image</span>
+                    </div>
+                  )}
+                  {/* 番号バッジ :/}
+                  <div className="absolute top-2 left-2 w-8 h-8 rounded-full bg-accent flex text-white flexitems-center justify-center font-bold shadow-md">
+                    {index + 1}
                   </div>
-                  <div className="flex-1">
-                    <h4 className="text-lg font-semibold text-foreground mb-2">
-                      {book.title}
-                    </h4>
-                    <p className="text-foreground/70">
+                </div>
+
+                {/* 右側：ほんの詳細情報 */}
+                <div className="p-6 flex-1 flex flex-col justify-between">
+                  <div>
+                    <div className="flex justify-between items-start gap-2 mb-2">
+                      <h4 className="text-xl font-bold text-foreground">
+                        {book.title}
+                      </h4>
+                      {book.infoLink && (
+                        <span className="flex-shrink-0 px-2 py-0.5 rounded text-[10px] font-bokd uppecase tracking-wider bg-accent/20 text-accent border border-accent/30">
+                          eBook
+                        </span>
+                      )}
+                    </div>
+                    {book.author && (
+                      <p className="text-sm font-medium text-accent mb-3"
+                        {book.author}
+                      </p>
+                    )}
+                    <p className="text-foreground/70 text-sm leading-relaxed mb-4">
                       {book.reason}
                     </p>
+                  </div>
+
+                  {/* アクションボタン *}
+                  <div className="flex flex-wrap gap-3 mt-auto pt-4 border-t border-border/50">
+                    {book.previewUrl && (
+                      <a
+                        href={book.previewUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-accent hover:underline"
+                      >
+                        <BookOpen className="w-3.5 h-3.5" />
+                        試し読みをする
+                      </a>
+                    )}
+                    {book.infoLink && (
+                      <a
+                        href={book.infoLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
+                      >                     >
+                        <ExternalLink className="w-3.5 h-3.5" />
+                        詳細を見る
+                      </a> 
+                    )}
                   </div>
                 </div>
               </div>

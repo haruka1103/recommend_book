@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { BookRecommendationForm } from '@/components/book-recommendation-form'
@@ -11,7 +12,15 @@ export default function Home() {
   const [recommendation, setRecommendation] = useState<{
     genres: string[]
     description: string
-    books: Array<{ title: string; reason: string }>
+    books: Array<{ 
+      title: string; 
+      author: string;
+      reason: string;
+      cover: string | null;
+      previewUrl: string | null;
+      isEbook: boolean;
+      infoLink: string | null;
+     }>
   } | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -26,10 +35,13 @@ export default function Home() {
         body: JSON.stringify({ mood }),
       })
 
+      if (!response.ok) throw new Error('取得に失敗しました')
+
       const data = await response.json()
       setRecommendation(data)
     } catch (error) {
       console.error('Error:', error)
+      alert("エラーが発生しました。しばらくしてから再度お試しください。")
     } finally {
       setIsLoading(false)
     }
