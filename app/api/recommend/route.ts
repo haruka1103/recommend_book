@@ -52,8 +52,8 @@ export async function POST(request: Request) {
     const enrichedBooks = await Promise.all(
       resultObj.books.map(async (book: any) => {
         try{
-          const seachUrl = 'https://www.googleapis.com/books/v1/volumes?q=intitle:${encedeURIComponent(book.title)}&key=${apikey}';
-          const res = await fetch(seachUrl);
+          const searchUrl = `https://www.googleapis.com/books/v1/volumes?q=intitle:${encodeURIComponent(book.title)}&key=${apikey}`;
+          const res = await fetch(searchUrl);
           const data = await res.json();
           const item = data.items?.[0];
           return {
@@ -77,7 +77,7 @@ export async function POST(request: Request) {
     
     console.log('Successfully generated recommendation:', resultObj)
 
-    return NextResponse.json(resultObj)
+    return NextResponse.json(finalResponse)
   } catch (err) {
     console.error('Error in /api/recommend:', err)
     // Return error message but avoid leaking sensitive details

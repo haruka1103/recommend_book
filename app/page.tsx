@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { BookRecommendationForm } from '@/components/book-recommendation-form'
 import { BookRecommendationResult } from '@/components/book-recommendation-result'
 import { Book, Sparkles } from 'lucide-react'
