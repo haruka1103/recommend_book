@@ -52,7 +52,7 @@ export async function POST(request: Request) {
     const enrichedBooks = await Promise.all(
       resultObj.books.map(async (book: any) => {
         try{
-          const searchUrl = `https://www.googleapis.com/books/v1/volumes?q=intitle:${encodeURIComponent(book.title)}&key=${apikey}`;
+          const searchUrl = `https://www.googleapis.com/books/v1/volumes?q=intitle:${encodeURIComponent(book.title)}+inauthor:${encodeURIComponent(book.author)}&langRestrict=ja&maxResults=1&key=${apikey}`;
           const res = await fetch(searchUrl);
           const data = await res.json();
           const item = data.items?.[0];
