@@ -1,19 +1,19 @@
 'use client'
 
 import { Card } from '@/components/ui/card'
-import { BookOpen, Tag, ExternalLink, Book as BookIcom } from 'lucide-react'
+import { BookOpen, Tag, ExternalLink, Book as BookIcon } from 'lucide-react'
 
 interface BookRecommendationResultProps {
   genres: string[]
   description: string
   books: Array<{
     title: string
+    author?: string
     reason: string
-    author: string
-    cover: string | null
-    previewUrl: string | null
-    isEbook: boolean
-    infoLink: string | null
+    cover?: string | null
+    previewUrl?: string | null
+    isEbook?: boolean
+    infoLink?: string | null
   }>
 }
 
@@ -68,47 +68,48 @@ export function BookRecommendationResult({
         </div>
 
         <div className="grid gap-6">
-          {books.pam((book, index) => (
+          {books.map((book, index) => (
             <Card
               key={index}
-              className="bg-card/80 backdrop-blur border-border shadow-lg hover:shadow-xl hover:border-accent/50 transition-all"
+              className="bg-card/80 backdrop-blur border-border shadow-lg hover:shadow-xl hover:border-accent/50 transition-all overflow-hidden"
             >
               <div className="p-0 flex flex-col sm:flex-row">
-                {/*左側：本の表紙画像*/}
-                <div className="w-full sm:w-40 h-56 bg-muted relative flex-shrink-0">
+                {/* 左側：本の表紙画像 */}
+                <div className="w-full sm:w-40 h-56 sm:h-auto bg-muted relative flex-shrink-0">
                   {book.cover ? (
-                    <Image
+                    <img
                       src={book.cover}
                       alt={book.title}
-                      className="w-full h-full objext-cover"
+                      className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground bg-accent/5>
-                      <BookIcom className="w-10 h-10 mb-2 opacity-20" />
-                      <span className="text-sm">No Image</span>
+                    <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground bg-accent/5">
+                      {/* 修正箇所: BookIcom ではなく BookIcon */}
+                      <BookIcon className="w-10 h-10 mb-2 opacity-20" />
+                      <span className="text-xs">No Image</span>
                     </div>
                   )}
-                  {/* 番号バッジ :/}
-                  <div className="absolute top-2 left-2 w-8 h-8 rounded-full bg-accent flex text-white flexitems-center justify-center font-bold shadow-md">
+                  {/* 番号バッジ */}
+                  <div className="absolute top-2 left-2 w-8 h-8 rounded-full bg-accent text-white flex items-center justify-center font-bold shadow-md">
                     {index + 1}
                   </div>
                 </div>
 
-                {/* 右側：ほんの詳細情報 */}
+                {/* 右側：本の詳細情報 */}
                 <div className="p-6 flex-1 flex flex-col justify-between">
                   <div>
                     <div className="flex justify-between items-start gap-2 mb-2">
                       <h4 className="text-xl font-bold text-foreground">
                         {book.title}
                       </h4>
-                      {book.infoLink && (
-                        <span className="flex-shrink-0 px-2 py-0.5 rounded text-[10px] font-bokd uppecase tracking-wider bg-accent/20 text-accent border border-accent/30">
+                      {book.isEbook && (
+                        <span className="flex-shrink-0 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-accent/20 text-accent border border-accent/30">
                           eBook
                         </span>
                       )}
                     </div>
                     {book.author && (
-                      <p className="text-sm font-medium text-accent mb-3"
+                      <p className="text-sm font-medium text-accent mb-3">
                         {book.author}
                       </p>
                     )}
@@ -117,7 +118,8 @@ export function BookRecommendationResult({
                     </p>
                   </div>
 
-                  {/* アクションボタン *}
+                  {/* 修正箇所: コメントアウトの閉じタグミスを修正 */}
+                  {/* アクションボタン */}
                   <div className="flex flex-wrap gap-3 mt-auto pt-4 border-t border-border/50">
                     {book.previewUrl && (
                       <a
@@ -136,10 +138,10 @@ export function BookRecommendationResult({
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
-                      >                     >
+                      >
                         <ExternalLink className="w-3.5 h-3.5" />
                         詳細を見る
-                      </a> 
+                      </a>
                     )}
                   </div>
                 </div>
